@@ -1,0 +1,130 @@
+import org.gradle.internal.os.OperatingSystem
+
+
+
+plugins {
+    // Apply the java-library plugin for API and implementation separation.
+    id 'java-library'
+}
+
+project.ext.lwjglVersion = "3.3.1"
+project.ext.jomlVersion = "1.10.4"
+
+switch (OperatingSystem.current()) {
+	case OperatingSystem.LINUX:
+		def osArch = System.getProperty("os.arch")
+		project.ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
+			? "natives-linux-${osArch.contains("64") || osArch.startsWith("armv8") ? "arm64" : "arm32"}"
+			: "natives-linux"
+		break
+	case OperatingSystem.MAC_OS:
+		project.ext.lwjglNatives = System.getProperty("os.arch").startsWith("aarch64") ? "natives-macos-arm64" : "natives-macos"
+		break
+	case OperatingSystem.WINDOWS:
+		def osArch = System.getProperty("os.arch")
+		project.ext.lwjglNatives = osArch.contains("64")
+			? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
+			: "natives-windows-x86"
+		break
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+
+dependencies {
+    // Use JUnit Jupiter for testing.
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+
+    // This dependency is exported to consumers, that is to say found on their compile classpath.
+    api 'org.apache.commons:commons-math3:3.6.1'
+
+    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+    implementation 'com.google.guava:guava:30.1.1-jre'
+    
+    // LWJGL dependencies
+    api platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+	api "org.lwjgl:lwjgl"
+	api "org.lwjgl:lwjgl-assimp"
+	api "org.lwjgl:lwjgl-bgfx"
+	api "org.lwjgl:lwjgl-cuda"
+	api "org.lwjgl:lwjgl-egl"
+	api "org.lwjgl:lwjgl-glfw"
+	api "org.lwjgl:lwjgl-jawt"
+	api "org.lwjgl:lwjgl-jemalloc"
+	api "org.lwjgl:lwjgl-libdivide"
+	api "org.lwjgl:lwjgl-llvm"
+	api "org.lwjgl:lwjgl-lmdb"
+	api "org.lwjgl:lwjgl-lz4"
+	api "org.lwjgl:lwjgl-meow"
+	api "org.lwjgl:lwjgl-meshoptimizer"
+	api "org.lwjgl:lwjgl-nanovg"
+	api "org.lwjgl:lwjgl-nfd"
+	api "org.lwjgl:lwjgl-nuklear"
+	api "org.lwjgl:lwjgl-odbc"
+	api "org.lwjgl:lwjgl-openal"
+	api "org.lwjgl:lwjgl-opencl"
+	api "org.lwjgl:lwjgl-opengl"
+	api "org.lwjgl:lwjgl-opengles"
+	api "org.lwjgl:lwjgl-openvr"
+	api "org.lwjgl:lwjgl-openxr"
+	api "org.lwjgl:lwjgl-opus"
+	api "org.lwjgl:lwjgl-par"
+	api "org.lwjgl:lwjgl-remotery"
+	api "org.lwjgl:lwjgl-rpmalloc"
+	api "org.lwjgl:lwjgl-shaderc"
+	api "org.lwjgl:lwjgl-spvc"
+	api "org.lwjgl:lwjgl-sse"
+	api "org.lwjgl:lwjgl-stb"
+	api "org.lwjgl:lwjgl-tinyexr"
+	api "org.lwjgl:lwjgl-tinyfd"
+	api "org.lwjgl:lwjgl-tootle"
+	api "org.lwjgl:lwjgl-vma"
+	api "org.lwjgl:lwjgl-vulkan"
+	api "org.lwjgl:lwjgl-xxhash"
+	api "org.lwjgl:lwjgl-yoga"
+	api "org.lwjgl:lwjgl-zstd"
+	runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-assimp::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-bgfx::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-jemalloc::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-libdivide::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-llvm::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-lmdb::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-lz4::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-meow::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-meshoptimizer::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-nanovg::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-nfd::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-nuklear::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-opengles::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-openvr::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-openxr::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-opus::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-par::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-remotery::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-rpmalloc::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-shaderc::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-spvc::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-sse::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-tinyexr::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-tinyfd::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-tootle::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-vma::$lwjglNatives"
+	if (lwjglNatives == "natives-macos" || lwjglNatives == "natives-macos-arm64") runtimeOnly "org.lwjgl:lwjgl-vulkan::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-xxhash::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-yoga::$lwjglNatives"
+	runtimeOnly "org.lwjgl:lwjgl-zstd::$lwjglNatives"
+	api "org.joml:joml:${jomlVersion}"
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
