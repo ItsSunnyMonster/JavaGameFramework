@@ -1,3 +1,7 @@
+//
+// Copyright 2022 ItsSunnyMonster
+//
+
 package io.github.itssunnymonster.jgf.glfw.window;
 
 import static org.lwjgl.system.MemoryUtil.NULL;

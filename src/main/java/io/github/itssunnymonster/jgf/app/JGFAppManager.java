@@ -1,3 +1,7 @@
+//
+// Copyright 2022 ItsSunnyMonster
+//
+
 package io.github.itssunnymonster.jgf.app;
 
 public class JGFAppManager {
